@@ -1,10 +1,11 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import AdminLayout from "../components/structures/AdminLayout";
 import WPLayout from "../components/structures/WPLayout/WPLayout";
 
 const Home: NextPage = () => {
   return (
-    <div className="bg-wp-background min-h-screen">
+    <div>
       <Head>
         <title>
           NextPress - A WordPress-inspired dashboard built with Next.js
