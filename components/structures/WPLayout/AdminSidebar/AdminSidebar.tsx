@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, SVGProps } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
   AdjustmentsIcon,
@@ -14,7 +14,7 @@ import {
   UsersIcon,
   XIcon,
 } from "@heroicons/react/solid";
-import { classNames } from "../../../utils/common";
+import { classNames } from "../../../../utils/common";
 
 const navigation = [
   { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
@@ -28,6 +28,102 @@ const navigation = [
   { name: "Tools", href: "#", icon: CogIcon, current: false },
   { name: "Settings", href: "#", icon: AdjustmentsIcon, current: false },
 ];
+
+const hey = `<ul id="adminmenu">
+<li
+  class="wp-first-item wp-has-submenu wp-has-current-submenu wp-menu-open menu-top menu-top-first menu-icon-dashboard"
+  id="menu-dashboard">
+  <a href="index.php"
+    class="wp-first-item wp-has-submenu wp-has-current-submenu wp-menu-open menu-top menu-top-first menu-icon-dashboard"
+    aria-haspopup="false">
+    <div class="wp-menu-arrow">
+      <div></div>
+    </div>
+    <div class="wp-menu-image dashicons-before dashicons-dashboard" aria-hidden="true"><br></div>
+    <div class="wp-menu-name">Dashboard</div>
+  </a>
+  <ul class="wp-submenu wp-submenu-wrap">
+    <li class="wp-submenu-head" aria-hidden="true">Dashboard</li>
+    <li class="wp-first-item current"><a href="index.php" class="wp-first-item current"
+        aria-current="page">Home</a></li>
+    <li><a href="update-core.php">Updates <span class="update-plugins count-6"><span
+            class="update-count">6</span></span></a></li>
+  </ul>
+</li>`;
+
+interface LinkItem {
+  name: string;
+  href: string;
+}
+
+interface MenuItem extends LinkItem {
+  icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
+  current: boolean;
+  sublinks?: LinkItem[];
+}
+
+const sidebarLinks: MenuItem[] = [
+  { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
+  { name: "Posts", href: "#", icon: DocumentTextIcon, current: false },
+  { name: "Media", href: "#", icon: PhotographIcon, current: false },
+  { name: "Pages", href: "#", icon: DocumentDuplicateIcon, current: false },
+  { name: "Comments", href: "#", icon: AnnotationIcon, current: false },
+  { name: "Appearance", href: "#", icon: SparklesIcon, current: false },
+  { name: "Plugins", href: "#", icon: PuzzleIcon, current: false },
+  { name: "Users", href: "#", icon: UsersIcon, current: false },
+  { name: "Tools", href: "#", icon: CogIcon, current: false },
+  { name: "Settings", href: "#", icon: AdjustmentsIcon, current: false },
+];
+
+export function AdminMenu({ items }: { items: MenuItem[] }) {
+  return (
+    <ul className="mt-1 flex-1">
+      {items.map((item, i) => (
+        <li key={i} className="relative" >
+          <a
+            key={item.name}
+            href={item.href}
+            className={classNames(
+              "border-l-4 border-transparent text-white",
+              item.current
+                ? "bg-wp-blue hover:border-white"
+                : "hover:text-wp-blue hover:border-wp-blue",
+              "group flex items-center px-2 py-2 text-sm"
+            )}
+          >
+            <item.icon
+              className={classNames(
+                item.current
+                  ? "text-gray-300"
+                  : "text-wp-gray group-hover:text-wp-blue",
+                "mr-3 flex-shrink-0 h-5 w-5"
+              )}
+              aria-hidden="true"
+            />
+            <span>{item.name}</span>
+          </a>
+          <ul className="hidden">
+            <li>{item.name}</li>
+            {item.sublinks?.map((sublink, id) => (
+              <li key={sublink.name + id}>
+                <a>{sublink.name}</a>
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))}
+      <a
+        href="#"
+        className={classNames(
+          "border-l-4 border-transparent text-wp-gray text-wp-sm hover:text-wp-blue hover:border-wp-blue group flex items-center px-2 py-2"
+        )}
+      >
+        <ArrowCircleLeftIcon className="text-wp-gray group-hover:text-wp-blue mr-3 flex-shrink-0 h-5 w-5" />
+        <span>Collapse Menu</span>
+      </a>
+    </ul>
+  );
+}
 
 function SidebarLinks() {
   return (
@@ -147,7 +243,7 @@ export default function AdminSidebar({
       <div className="pt-8 hidden md:flex md:w-40 md:flex-col md:fixed md:inset-y-0">
         <div className="flex-1 flex flex-col min-h-0 bg-wp-dark">
           <div className="flex-1 flex flex-col pt-2 pb-4 overflow-y-auto">
-            <SidebarLinks />
+            <AdminMenu items={sidebarLinks} />
           </div>
         </div>
       </div>
